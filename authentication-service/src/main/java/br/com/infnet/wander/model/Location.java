@@ -2,28 +2,32 @@ package br.com.infnet.wander.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import java.math.BigInteger;
 
 @Entity
-@Table(	name = "Location")
+@Table(	name = "locations")
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 public class Location {
-    
+
+    @Id
     @Valid
     @Schema(name = "location_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "location_id", nullable = false)
     @JsonProperty("location_id")
-    private Integer locationId;
+    private BigInteger locationId;
     
+    @ManyToOne
+    @JoinColumn(name = "opening_hours_id")
     @JsonProperty("opening_hours")
     private OpeningHours openingHours;
     

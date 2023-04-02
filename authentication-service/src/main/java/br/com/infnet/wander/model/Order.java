@@ -6,14 +6,11 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.Valid;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -22,27 +19,36 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@Table(	name = "Orders")
+@Table(	name = "orders")
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Order {
     
     @Id
     @Schema(name = "order_id", required = true)
     @JsonProperty("orderId")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "order_id", nullable = false)
     @JsonSerialize(using = ToStringSerializer.class)
     private BigInteger orderId;
     
+    @ManyToOne
+    @JoinColumn(name = "car_car_id")
     @Valid
     @JsonProperty("car")
     @Schema(name = "car", required = true)
     private Car car;
     
+    @ManyToOne
+    @JoinColumn(name = "location_of_rental_id")
     @Valid
     @JsonProperty("location_of_rental")
     @Schema(name = "location_of_rental", required = true)
     private Location locationOfRental;
     
+    @ManyToOne
+    @JoinColumn(name = "location_of_return_location_id")
     @Valid
     @Schema(name = "location_of_return", required = true)
     @JsonProperty("location_of_return")

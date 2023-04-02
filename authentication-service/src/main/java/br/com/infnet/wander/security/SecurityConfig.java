@@ -1,13 +1,11 @@
 package br.com.infnet.wander.security;
 
 import br.com.infnet.wander.security.jwt.AuthEntryPointJwt;
-import br.com.infnet.wander.security.utility.IUserDetailsService;
 import br.com.infnet.wander.security.jwt.JwtFilter;
-import lombok.RequiredArgsConstructor;
+import br.com.infnet.wander.security.utility.IUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,22 +13,23 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableGlobalMethodSecurity(
-        // securedEnabled = true,
+         securedEnabled = true,
         // jsr250Enabled = true,
         prePostEnabled = true)
-public class SecurityConfig  {
+public class SecurityConfig {
 
 
     @Autowired
@@ -38,6 +37,8 @@ public class SecurityConfig  {
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+
+
     Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     @Bean
     public JwtFilter authenticationJwtTokenFilter() {
@@ -82,73 +83,30 @@ public class SecurityConfig  {
 
         http.authenticationProvider(authenticationProvider());
 
-//        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.logout(logout -> logout
+                        .logoutUrl("/api/v1/auth/logout")
+                        .addLogoutHandler(new SecurityContextLogoutHandler())
+                )
+                .formLogin()
+                .disable()
+                .csrf()
+                .disable()
+                .cors()
+                .disable()
+                .userDetailsService(userDetailsService)
+                .exceptionHandling()
+                .authenticationEntryPoint(
+                        (request, response, authException) -> {
+                            logger.error("An exception occurred at authenticationEntryPoint: {}",
+                                    authException.toString());
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+                        }
+                )
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//
-//        http.logout(logout -> logout
-//                        .logoutUrl("/api/v1/auth/logout")
-//                        .addLogoutHandler(new SecurityContextLogoutHandler())
-//                )
-//                .formLogin()
-//                .disable()
-//                .csrf()
-//                .disable()
-//                .cors()
-//                .disable()
-//                .authorizeHttpRequests()
-//                .antMatchers("/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .userDetailsService(userDetailsService)
-//                .exceptionHandling()
-//                .authenticationEntryPoint(
-//                        (request, response, authException) -> {
-//                            logger.error("An exception occurred at authenticationEntryPoint: {}",
-//                                    authException.toString());
-//                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
-//                        }
-//                )
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
-//    }
-
-//    protected void configure(HttpSecurity http) throws Exception {
-//
-//        http.logout(logout -> logout
-//                        .logoutUrl("/api/v1/auth/logout")
-//                        .addLogoutHandler(new SecurityContextLogoutHandler())
-//                )
-//                .formLogin()
-//                .disable()
-//                .csrf()
-//                .disable()
-//                .cors()
-//                .disable()
-//                .authorizeHttpRequests()
-//                .antMatchers("/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .userDetailsService(userDetailsService)
-//                .exceptionHandling()
-//                .authenticationEntryPoint(
-//                        (request, response, authException) -> {
-//                            logger.error("An exception occurred at authenticationEntryPoint: {}",
-//                                    authException.toString());
-//                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
-//                        }
-//                )
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .addFilterBefore(filter, EmailPassword);
-//    }
-
 }

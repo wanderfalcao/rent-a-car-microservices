@@ -1,12 +1,13 @@
 package br.com.infnet.wander.security.utility;
 
+import br.com.infnet.wander.model.Role;
 import br.com.infnet.wander.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private BigInteger id;
+    private Long id;
 
     private String firstname;
 
@@ -27,7 +28,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(BigInteger id, String firstname, String lastname, String email, String password,
+    public UserDetailsImpl(Long id, String firstname, String lastname, String email, String password,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.firstname = firstname;
@@ -38,10 +39,11 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
+        List<Role> roles = new ArrayList<>();
+        roles.add(user.getRole());
+        List<GrantedAuthority> authorities = roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
-
         return new UserDetailsImpl(
                 user.getId(),
                 user.getFirstname(),
@@ -53,16 +55,18 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+
+        return  authorities;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
     public String getEmail() {
         return email;
     }
+
 
     @Override
     public String getPassword() {

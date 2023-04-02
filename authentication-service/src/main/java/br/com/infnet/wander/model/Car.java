@@ -4,21 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.*;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-
-import java.math.BigInteger;
 
 @Entity
 @Table(	name = "cars")
@@ -26,13 +21,15 @@ import java.math.BigInteger;
 @Data
 @NoArgsConstructor
 public class Car {
-    
+
     @Id
     @Valid
     @Schema(name = "car_id", required = true, example = "1")
     @JsonProperty("car_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "car_id", nullable = false)
     @JsonSerialize(using = ToStringSerializer.class)
-    private BigInteger carId;
+    private Long id;
     
     @Schema(name = "car_status", required = true, example = "AVAILABLE")
     @JsonProperty("car_status")

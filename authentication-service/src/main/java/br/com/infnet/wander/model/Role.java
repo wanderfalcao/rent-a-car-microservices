@@ -1,28 +1,30 @@
 package br.com.infnet.wander.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "role_id", nullable = false)
+    private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(name = "name_role", length = 20)
     private ERole name;
 
-    public Role() {
+    @OneToMany(mappedBy = "role")
+    private Set<User> user;
 
-    }
-
-    public Role(ERole name) {
-        this.name = name;
-    }
 
 
 }

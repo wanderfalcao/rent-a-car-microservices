@@ -1,15 +1,10 @@
 package br.com.infnet.wander.domain.dto;
 
-import br.com.infnet.wander.model.ERole;
-import br.com.infnet.wander.model.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.Pattern;
-import java.util.Collections;
-import java.util.Set;
 
 @Data
 public class SignupRequest {
@@ -27,10 +22,10 @@ public class SignupRequest {
     private final String lastname;
 
     @JsonProperty("password")
-    @Schema(name = "password", example = "123", required = true)
+    @Schema(name = "password", example = "W123@xji", required = true)
     private final String password;
 
     @JsonProperty("Role")
-    @Schema(name = "Role", example = "[\"mod\",\"user\"]", required = false)
-    private Set<String> role;
+    @Schema(name = "Role", example = "user", required = false)
+    private final String role;
 }

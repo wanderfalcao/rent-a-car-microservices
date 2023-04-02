@@ -2,9 +2,9 @@ package br.com.infnet.wander.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import java.math.BigInteger;
 
 @Data

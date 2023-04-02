@@ -4,19 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 
 @Entity
 @Table(	name = "OpeningHours")
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class OpeningHours {
-    
+
+    @Id
     @Valid
     @Schema(name = "opening_hours_id", required = true)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "opening_hours_id", nullable = false)
     @JsonProperty("opening_hours_id")
     private Integer openingHoursId;
     
