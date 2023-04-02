@@ -12,6 +12,7 @@
     <url>http://maven.apache.org</url>
     <modules>
         <module>discovery-service</module>
+        <module>authentication-service</module>
     </modules>
 
 
