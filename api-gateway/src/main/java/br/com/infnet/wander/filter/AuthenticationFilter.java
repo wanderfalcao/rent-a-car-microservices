@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-@Slf4j
+
 @AllArgsConstructor
 @RefreshScope
 @Component
@@ -27,7 +27,6 @@ public class AuthenticationFilter implements GatewayFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
 
-        log.info(request.getMethodValue() + ": " + request.getPath());
 
         if (RouterValidator.isSecuredGet.test(request) && RouterValidator.isSecuredPost.test(request)) {
 
@@ -48,7 +47,6 @@ public class AuthenticationFilter implements GatewayFilter {
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
-        log.error(err);
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
         return response.setComplete();

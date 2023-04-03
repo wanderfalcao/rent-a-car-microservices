@@ -1,6 +1,6 @@
 spring:
   config:
-    location: http://localhost:8071
+    location: http://localhost:8070
   application:
     name: api-gateway
   profiles:
@@ -32,7 +32,7 @@ management:
       probes:
         enabled: true
 server:
-  port: 8079
+  port: 9411
 
 #logging:
 #  level:
