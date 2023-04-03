@@ -1,0 +1,40 @@
+spring:
+  config:
+    location: http://localhost:8071
+  application:
+    name: api-gateway
+  profiles:
+    active: dev
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTION
+      discovery.locator:
+        enabled: true
+        lowerCaseServiceId: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+  endpoint:
+    health:
+      probes:
+        enabled: true
+server:
+  port: 8079
+
+#logging:
+#  level:
+#    org.springframework.cloud.gateway: DEBUG
+#    reactor.netty.http.client: DEBUG
