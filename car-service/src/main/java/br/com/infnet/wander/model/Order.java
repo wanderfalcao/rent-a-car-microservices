@@ -7,53 +7,37 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Date;
 
-@Entity
-@Table(	name = "orders")
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 public class Order {
+
+    @Transient
+    public static final String SEQUENCE_NAME = "orders_sequence";
     
     @Id
     @Schema(name = "order_id", required = true)
     @JsonProperty("orderId")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "order_id", nullable = false)
     @JsonSerialize(using = ToStringSerializer.class)
-    private BigInteger orderId;
+    private Long id;
     
-    @ManyToOne
-    @JoinColumn(name = "car_car_id")
     @Valid
     @JsonProperty("car")
     @Schema(name = "car", required = true)
     private Car car;
-    
-    @ManyToOne
-    @JoinColumn(name = "location_of_rental_id")
-    @Valid
-    @JsonProperty("location_of_rental")
-    @Schema(name = "location_of_rental", required = true)
-    private Location locationOfRental;
-    
-    @ManyToOne
-    @JoinColumn(name = "location_of_return_location_id")
-    @Valid
-    @Schema(name = "location_of_return", required = true)
-    @JsonProperty("location_of_return")
-    private Location locationOfReturn;
-    
+
     @Valid
     @Schema(name = "date_of_booking", required = true)
     @JsonProperty("date_of_booking")
