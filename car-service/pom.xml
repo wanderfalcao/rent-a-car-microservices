@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.infnet.wander</groupId>
-    <artifactId>carDTO-service</artifactId>
+    <artifactId>car-service</artifactId>
     <version>1.0.0</version>
 
     <properties>
