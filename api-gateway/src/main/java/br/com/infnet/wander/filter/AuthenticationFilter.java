@@ -5,15 +5,20 @@ import br.com.infnet.wander.utility.RouterValidator;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.RequestPath;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+
 
 
 @AllArgsConstructor
@@ -23,15 +28,19 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private JwtUtil jwtUtil;
 
+//if (!RouterValidator.isSecuredGet.test(request)
+//            || !RouterValidator.isSecuredPost.test(request)
+//            || !RouterValidator.isSecuredGetOnlyADMIN.test((request)))
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-
-
-        if (RouterValidator.isSecuredGet.test(request) && RouterValidator.isSecuredPost.test(request)) {
-
-            if (this.isAuthMissing(request))
+        boolean test = RouterValidator.isNotSecuredPost.test(request);
+        if(!RouterValidator.isNotSecuredPost.test(request)){
+            return chain.filter(exchange);
+        } else {
+            if (this.isAuthMissing(request)) {
                 return this.onError(exchange, "Authorization header is missing in request", HttpStatus.UNAUTHORIZED);
+            }
 
             final String token = this.getAuthHeader(request);
 
@@ -41,7 +50,15 @@ public class AuthenticationFilter implements GatewayFilter {
                 return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
 
             this.populateRequestWithHeaders(exchange, jwt);
+
+            if (!RouterValidator.isSecuredGetOnlyADMIN.test(request)){
+                String role = jwtUtil.getRoles(jwt);
+                if(!role.equals("ROLE_ADMIN")) {
+                    return this.onError(exchange, "Admin privilege is required", HttpStatus.UNAUTHORIZED);
+                }
+            }
         }
+
 
         return chain.filter(exchange);
     }
@@ -57,14 +74,16 @@ public class AuthenticationFilter implements GatewayFilter {
     }
 
     private boolean isAuthMissing(ServerHttpRequest request) {
+
         return !request.getHeaders().containsKey("Authorization");
     }
 
     private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
-        String decodedJWT = jwtUtil.decodedJWT(token).get("email").toString();
+        Claims decodedJWT = jwtUtil.decodedJWT(token);
+
 
         exchange.getRequest().mutate()
-                .header("username", decodedJWT)
+                .header("email", decodedJWT.get("username").toString())
                 .build();
     }
 

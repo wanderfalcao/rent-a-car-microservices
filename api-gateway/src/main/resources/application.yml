@@ -5,6 +5,7 @@ spring:
     name: api-gateway
   profiles:
     active: dev
+springdoc:
   cloud:
     gateway:
       globalcors:
@@ -22,19 +23,21 @@ spring:
         enabled: true
         lowerCaseServiceId: true
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: gateway
-  endpoint:
-    health:
-      probes:
-        enabled: true
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "gateway, api-docs, swagger-ui"
+#  endpoint:
+#    health:
+#      probes:
+#        enabled: true
 server:
-  port: 9411
+  port: 8060
 
-#logging:
-#  level:
-#    org.springframework.cloud.gateway: DEBUG
-#    reactor.netty.http.client: DEBUG
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
