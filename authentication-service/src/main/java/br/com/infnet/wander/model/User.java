@@ -48,7 +48,7 @@ public class User {
     @JsonProperty("password")
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role ;
 

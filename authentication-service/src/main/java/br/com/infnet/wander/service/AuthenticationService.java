@@ -8,8 +8,10 @@ import br.com.infnet.wander.model.User;
 import br.com.infnet.wander.repository.RoleRepository;
 import br.com.infnet.wander.repository.UserRepository;
 import br.com.infnet.wander.security.jwt.JwtUtil;
+import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +19,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +33,8 @@ public class AuthenticationService  {
 
 
     private final AuthenticationManager authenticationManager;
-
-    private final JwtUtil jwtUtil;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private final  UserRepository userRepository;
 
@@ -48,31 +56,34 @@ public class AuthenticationService  {
         this.encoder = encoder;
     }
 
+    public ResponseEntity<Map<String,String>> getDecryptJWT(String jwt) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+
+        String role = jwtUtil.getRolesWithSubstring(jwt);
+        String email = jwtUtil.getUsernameFromTokenWithSubstring(jwt);
+
+        Map<String,String> subject = new HashMap<>();
+        subject.put("role",role);
+        subject.put("email",email);
+
+        return ResponseEntity.ok(subject);
+    }
     public static boolean isValid(final String password) {
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
 
-    public String loginAdmin(String username, String password) {
+    public String loginAdmin(String email, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        username,
+                        email,
                         password);
         authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        String authority = byEmail.get().getRole().getName().toString();
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-        return jwtUtil.generateToken(usernamePasswordAuthenticationToken);
+        return jwtUtil.generateToken(usernamePasswordAuthenticationToken,authority);
     }
-    
-//    public String loginOrder(BigInteger orderId, String lastName) throws OrderNotFoundException {
-//        logger.info("Logging user in using orderId and lastName");
-//        Order order = orderRepository.findByOrderIdAndLastNameAllIgnoreCase(orderId, lastName).orElseThrow(
-//                () -> {
-//                    throw new OrderNotFoundException(String.format("Order with id %s was not found", orderId.toString()));
-//                }
-//        );
-//        return jwtUtil.generateTokenWithLastName(order.getLastName());
-//    }
 
     public ResponseEntity<MessageResponse> signup(String email, String firstname,String lastname, String password, String role) {
         if(!isValid(password)){
@@ -81,12 +92,7 @@ public class AuthenticationService  {
                     "please enter a password with a minimum of 8 characters and a maximum of 20.\n" +
                     "at least one uppercase, lowercase, and special character");
         }
-        if (userRepository.existsByFirstnameIgnoreCase(firstname)) {
-            throw new UserNotFoundException("Error: first name is already taken!");
-        }
-        if (userRepository.existsByLastnameIgnoreCase(lastname)) {
-            throw new UserNotFoundException("Error: last name is already taken!");
-        }
+
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new UserNotFoundException(("Error: Email is already in use!"));
         }

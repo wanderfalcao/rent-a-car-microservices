@@ -84,28 +84,28 @@ public class SecurityConfig {
         http.authenticationProvider(authenticationProvider());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.logout(logout -> logout
-                        .logoutUrl("/api/v1/auth/logout")
-                        .addLogoutHandler(new SecurityContextLogoutHandler())
-                )
-                .formLogin()
-                .disable()
-                .csrf()
-                .disable()
-                .cors()
-                .disable()
-                .userDetailsService(userDetailsService)
-                .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, authException) -> {
-                            logger.error("An exception occurred at authenticationEntryPoint: {}",
-                                    authException.toString());
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
-                        }
-                )
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        http.logout(logout -> logout
+//                        .logoutUrl("/api/v1/auth/logout")
+//                        .addLogoutHandler(new SecurityContextLogoutHandler())
+//                )
+//                .formLogin()
+//                .disable()
+//                .csrf()
+//                .disable()
+//                .cors()
+//                .disable()
+//                .userDetailsService(userDetailsService)
+//                .exceptionHandling()
+//                .authenticationEntryPoint(
+//                        (request, response, authException) -> {
+//                            logger.error("An exception occurred at authenticationEntryPoint: {}",
+//                                    authException.toString());
+//                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+//                        }
+//                )
+//                .and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
