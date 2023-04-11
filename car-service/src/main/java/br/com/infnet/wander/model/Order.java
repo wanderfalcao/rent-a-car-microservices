@@ -24,19 +24,16 @@ import java.util.Date;
 @NoArgsConstructor
 public class Order {
 
-    @Transient
-    public static final String SEQUENCE_NAME = "orders_sequence";
-    
+
     @Id
     @Schema(name = "order_id", required = true)
     @JsonProperty("orderId")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
-    
-    @Valid
-    @JsonProperty("car")
-    @Schema(name = "car", required = true)
-    private Car car;
+
+    @JsonProperty("car_id")
+    @Schema(name = "car_id", required = true)
+    private Long carId;
 
     @Valid
     @Schema(name = "date_of_booking", required = true)
@@ -89,9 +86,5 @@ public class Order {
     @JsonProperty("order_status")
     private OrderStatus orderStatus;
 
-    @Schema(name = "saga_status")
-    @JsonProperty("saga_status")
-    private SagaStatus status;
-    
 }
 

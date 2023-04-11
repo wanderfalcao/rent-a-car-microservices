@@ -20,6 +20,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Data
 @Document
+@NoArgsConstructor
 public class Car {
     @Transient
     public static final String SEQUENCE_NAME = "car_sequence";
@@ -61,11 +62,8 @@ public class Car {
     private Double price;
     @Valid
     @Schema(name = "picture_link", required = true,
-            example = "https://www.auto-data.net/en/audi-tt-rs-roadster-8s-facelift-2019-generation-7105#image8")
+            example = "https://3.bp.blogspot.com/-o5ikK8MaxDY/WnNDQYU9UQI/AAAAAAABBqE/N0ZDRy1hmXIsv23QjtE8qF0zoh50J9u0wCLcBGAs/s1600/Audi-TT-RS-2019-Brasil%2B%25283%2529.jpg")
     @JsonProperty("picture_link")
     private String pictureLink;
 
-    public Car() {
-
-    }
 }

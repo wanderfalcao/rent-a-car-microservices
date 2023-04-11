@@ -33,6 +33,7 @@ public class CarService {
     private final SequenceGeneratorCarService sequenceGeneratorCarService;
 
     public Car createCar(CarRequest carRequest) {
+
         Car car = carMapper.create(carRequest);
         car.setId(sequenceGeneratorCarService.generateSequence(Car.SEQUENCE_NAME));
         log.info("Service Mapped Car: [{}]", car);
@@ -72,17 +73,17 @@ public class CarService {
 
     public void checkCar(Order order) {
 
-        log.info("Check for car id {}", order.getCar().getId());
+        log.info("Check for car id {}", order.getCarId());
 
         if (
                 carRepository.findAll()
                         .stream()
                         .anyMatch(car -> car.getId()
-                                .equals(order.getCar().getId()))
+                                .equals(order.getCarId()))
         ) {
 
-            carRepository.findById(order.getCar().getId()).ifPresent(car -> {
-                order.setCar(car);
+            carRepository.findById(order.getCarId()).ifPresent(car -> {
+                order.setCarId(car.getId());
                 publishCarAvailable(order);
             });
 
@@ -95,8 +96,8 @@ public class CarService {
         
         try {
 
-            Car car = carRepository.findById(order.getCar().getId())
-                    .orElseThrow(() -> new CarNotFoundException("Car was not found for " + order.getCar().getId()));
+            Car car = carRepository.findById(order.getCarId())
+                    .orElseThrow(() -> new CarNotFoundException("Car was not found for " + order.getCarId()));
 
 
             if (order.getOrderStatus() == OrderStatus.ACTIVE) {
@@ -110,7 +111,7 @@ public class CarService {
 
             carRepository.save(car);
 
-            order.setCar(car);
+            order.setCarId(car.getId());
 
             publishOrderStatusSuccess(order);
 

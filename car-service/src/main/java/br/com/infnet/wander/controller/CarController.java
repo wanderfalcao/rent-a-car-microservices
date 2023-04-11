@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -34,9 +35,7 @@ public class CarController {
     @Autowired
     private CarService carService;
     
-//    public CarController(CarService carService) {
-//        this.carService = carService;
-//    }
+
     
     /**
      * POST /car : Create a new car
@@ -73,17 +72,26 @@ public class CarController {
             @ApiResponse(responseCode = "400", description = "Invalid Car Id", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))}),
             @ApiResponse(responseCode = "404", description = "Car not found", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))})},
-            security = {@SecurityRequirement(name = "bearerAuth")})
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))})})
     @DeleteMapping(value = "/car/{id}", produces = {"application/json"})
     public ResponseEntity<Response> deleteCarById(
-            @Parameter(name = "id", description = "The id of the user to update", required = true) @PathVariable("id")
+            @Parameter(name = "id", description = "The id of the car to delete", required = true) @PathVariable("id")
                     Long id) {
-        carService.deleteCarById(id);
-        Response response = new Response();
-        
-        response.setMessage(String.format("Successfully deleted car with id %s", id));
-        return ResponseEntity.ok(response);
+        if(!carService.getCarById(id).getCarStatus().equals(CarStatus.RENTED)){
+            carService.deleteCarById(id);
+            Response response = new Response();
+
+            response.setMessage("Successfully deleted car with id "+ id);
+            return ResponseEntity.ok(response);
+        }else{
+            Response response = new Response();
+
+            response.setMessage(String.format("The car with id %s cannot be deleted because the status is rented", id));
+            return ResponseEntity.ok(response);
+        }
+
+
+
     }
     
     /**

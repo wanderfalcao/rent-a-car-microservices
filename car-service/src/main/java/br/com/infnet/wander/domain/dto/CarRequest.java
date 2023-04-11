@@ -3,9 +3,12 @@ package br.com.infnet.wander.domain.dto;
 
 import br.com.infnet.wander.model.CarStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -13,25 +16,24 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Data
 public class CarRequest {
-    
-
+    @Valid
     @Schema(name = "car_status", required = true, example = "AVAILABLE")
     @JsonProperty("car_status")
     private CarStatus carStatus;
 
-    @Pattern(regexp = "^([\\w. ]+)$")
+    @Valid
     @Size(max = 32)
     @Schema(name = "manufacturer", required = true, example = "Audi")
     @JsonProperty("manufacturer")
     private String manufacturer;
 
-    @Pattern(regexp = "^([\\w. ]+)$")
+    @Valid
     @Size(max = 32)
     @Schema(name = "color", required = true, example = "Black")
     @JsonProperty("color")
     private String color;
-    
-    @Pattern(regexp = "^([\\w. ]+)$")
+
+    @Valid
     @Size(max = 32)
     @Schema(name = "model", required = true, example = "TT")
     @JsonProperty("model")
@@ -47,7 +49,9 @@ public class CarRequest {
     
     @Valid
     @Schema(name = "picture_link", required = true,
-            example = "https://www.auto-data.net/en/audi-tt-rs-roadster-8s-facelift-2019-generation-7105#image8")
+            example = "https://3.bp.blogspot.com/-o5ikK8MaxDY/WnNDQYU9UQI/AAAAAAABBqE/N0ZDRy1hmXIsv23QjtE8qF0zoh50J9u0wCLcBGAs/s1600/Audi-TT-RS-2019-Brasil%2B%25283%2529.jpg")
     @JsonProperty("picture_link")
     private String pictureLink;
+
+
 }
