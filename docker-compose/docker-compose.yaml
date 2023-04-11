@@ -34,17 +34,12 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: 'User'
-      # You can use whatever password you like
       MYSQL_PASSWORD: 'wanderSecret'
-      # Password for root access
       MYSQL_ROOT_PASSWORD: 'wanderSecret'
     ports:
-      # <Port exposed> : <MySQL Port running inside container>
       - '3306:3306'
     expose:
-      # Opens port 3306 on the container
       - '3306'
-      # Where our data will be persisted
 
   configuration-service:
     image: configuration-service:latest
@@ -123,135 +118,5 @@ networks:
 volumes:
   mongodb_orders_data:
   mongodb_cars_data:
-#  prometheus:
-#    image: prom/prometheus:latest
-#    ports:
-#      - "9090:9090"
-#    volumes:
-#      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-#    container_name: prometheus
 
-#  grafana:
-#    image: grafana/grafana:latest
-#    ports:
-#      - "3000:3000"
-#    environment:
-#      - GF_SECURITY_ADMIN_USER=admin
-#      - GF_SECURITY_ADMIN_PASSWORD=password
-#    container_name: grafana
-
-#  currencydatabase:
-#    image: mongo:5.0
-#    restart: always
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: wanderSecret
-#    ports:
-#      - "28080:27017"
-#    container_name: currency-database
-
-#  openinghoursdatabase:
-#    image: mongo:5.0
-#    restart: always
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: wanderSecret
-#    ports:
-#      - "28081:27017"
-#    container_name: opening-hours-database
-
-#  locationdatabase:
-#    image: mongo:5.0
-#    restart: always
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: wanderSecret
-#    ports:
-#      - "28082:27017"
-#    container_name: location-database
-
-#  cardatabase:
-#    image: mongo:5.0
-#    restart: always
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: wanderSecret
-#    ports:
-#      - "28083:27017"
-#    container_name: car-database
-
-
-
-#  elasticsearch:
-#    image:  docker.elastic.co/elasticsearch/elasticsearch:7.17.3
-#    environment:
-#      - node.name=elasticsearch
-#      - discovery.type=single-node
-#      - cluster.name=docker-cluster
-#      - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-#    ports:
-#      # Cluster communication port
-#      - "9300:9300"
-#      # REST communication port
-#      - "9200:9200"
-#    container_name: elasticsearch
-#
-#  zipkin:
-#    image: openzipkin/zipkin
-#    container_name: zipkin
-#    depends_on:
-#      - elasticsearch
-#    environment:
-#      - STORAGE_TYPE=elasticsearch
-#      - ES_HOSTS=elasticsearch:9300
-#    ports:
-#      - "9411:9411"
-#
-#  kibana:
-#    image: docker.elastic.co/kibana/kibana:7.17.3
-#    environment:
-#      ELASTICSEARCH_URL: "http://elasticsearch:9300"
-#    ports:
-#      - "5601:5601"
-#    container_name: kibana
-#
-#  logstash:
-#    image: docker.elastic.co/logstash/logstash:7.17.3
-#    container_name: logstash
-#    command: logstash -f /etc/logstash/conf.d/logstash.conf
-#    volumes:
-#      - ./logstash:/etc/logstash/conf.d
-#    ports:
-#      - "5005:5005"
-
-#  currency-service:
-#    build: ../currency-service/.
-#    ports:
-#      - "8080:8080"
-#    container_name: currency-service
-#  opening-hours-service:
-#    build: ../opening-hours-service/.
-#    container_name: opening-hours-service
-#    ports:
-#      - "8081:8081"
-#  location-service:
-#    build: ../location-service/.
-#    container_name: location-service
-#    ports:
-#      - "8082:8082"
-#  car-service:
-#    build: ../car-service/.
-#    container_name: car-service
-#    ports:
-#      - "8083:8083"
-#  order-service:
-#    build: ../order-service/.
-#    container_name: order-service
-#    ports:
-#      - "8084:8084"
 

@@ -32,34 +32,6 @@
   "policies": [],
   "queues": [
     {
-      "name": "LOCATION_CREATED_QUEUE",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {}
-    },
-    {
-      "name": "LOCATION_REJECTED_QUEUE",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {}
-    },
-    {
-      "name": "LOCATION_FINISHED_QUEUE",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {}
-    },
-    {
-      "name": "CURRENCY_CONVERT_REQUEST_QUEUE",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {}
-    },
-    {
       "name": "ORDER_CREATE_QUEUE",
       "vhost": "/",
       "durable": true,
@@ -106,41 +78,6 @@
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
-      "arguments": {}
-    },
-    {
-      "name": "LOCATION_NONEXISTENT_QUEUE",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {}
-    },
-    {
-      "name": "LOCATION_EXISTENT_QUEUE",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {}
-    }
-  ],
-  "exchanges": [
-    {
-      "name": "LOCATION_REJECTED_TOPIC_NOT_USED",
-      "vhost": "/",
-      "type": "fanout",
-      "durable": true,
-      "auto_delete": false,
-      "internal": false,
-      "arguments": {}
-    }
-  ],
-  "bindings": [
-    {
-      "source": "LOCATION_REJECTED_TOPIC_NOT_USED",
-      "vhost": "/",
-      "destination": "LOCATION_REJECTED_QUEUE",
-      "destination_type": "queue",
-      "routing_key": "",
       "arguments": {}
     }
   ]
