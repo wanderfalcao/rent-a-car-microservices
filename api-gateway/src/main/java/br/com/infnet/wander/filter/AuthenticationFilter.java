@@ -28,9 +28,6 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private JwtUtil jwtUtil;
 
-//if (!RouterValidator.isSecuredGet.test(request)
-//            || !RouterValidator.isSecuredPost.test(request)
-//            || !RouterValidator.isSecuredGetOnlyADMIN.test((request)))
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();

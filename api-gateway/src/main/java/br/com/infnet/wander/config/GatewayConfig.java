@@ -29,14 +29,6 @@ public class GatewayConfig {
                 .route("ORDER", r -> r.path("/api/v1/order/**")
                         .filters(f -> f.filter(filter))
                         .uri("lb://ORDER-SERVICE/"))
-                .route("swagger-ui",
-                        r -> r.path("/swagger-ui/**")
-                                .uri("classpath:/META-INF/resources/webjars/springdoc-openapi-ui/"))
-                // Rota para o Swagger API docs
-                .route("swagger-docs",
-                        r -> r.path("/v3/api-docs/**")
-                                .filters(f -> f.rewritePath("/v3/api-docs", "/v3/api-docs.yaml"))
-                                .uri("lb://API-GATEWAY/"))
                 .build();
     }
 

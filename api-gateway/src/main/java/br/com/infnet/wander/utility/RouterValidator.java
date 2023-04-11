@@ -11,26 +11,6 @@ import java.util.stream.Stream;
 
 @Component
 public class RouterValidator {
-//
-// "/api/v1/car/**",
-//         "/api/v1/car",
-//         "/api/v1/car/findByStatus",
-//         "/api/v1/currency",
-//         "/api/v1/currency/**",
-//         "/api/v1/opening-hours",
-//         "/api/v1/opening-hours/**",
-//         "/api/v1/location/**",
-//         "/api/v1/location"
-    public static final List<String> openApiEndpointsSecuredGet = List.of(
-        "/api/v1/order/",
-        "/api/v1/car"
-    );
-
-    public static final List<String> openApiEndpointsSecuredPost = List.of(
-            "/api/v1/order/"
-
-
-    );
 
     public static final List<String> openApiEndpointsPostNotSecured= List.of(
             "/api/v1/auth/signin",
@@ -42,24 +22,21 @@ public class RouterValidator {
            "/api/v1/order/getAll"
 
     );
+    public static final List<String> openApiEndpointsPostSecuredOnlyADMIN= List.of(
+            "/api/v1/car/"
 
-    public static final Predicate<ServerHttpRequest> isSecuredGet =
-            request -> openApiEndpointsSecuredGet
-                    .stream()
-                    .noneMatch(uri -> request.getPath().toString().equals(uri)
-                            && Objects.equals(request.getMethod(), HttpMethod.GET));
+    );
+    public static final List<String> openApiEndpointsDeleteSecuredOnlyADMIN= List.of(
+            "/api/v1/car/"
+
+    );
+
 
     public static final Predicate<ServerHttpRequest> isNotSecuredPost =
             request -> openApiEndpointsPostNotSecured
                     .stream()
                     .noneMatch(uri -> request.getPath().toString().equals(uri)
-                            && Objects.equals(request.getMethod(), HttpMethod.GET));
-
-    public static final Predicate<ServerHttpRequest> isSecuredPost =
-            request -> openApiEndpointsSecuredPost
-                    .stream()
-                    .noneMatch(uri -> request.getPath().toString().equals(uri)
-                            && Objects.equals(request.getMethod(), HttpMethod.GET));
+                            && Objects.equals(request.getMethod(), HttpMethod.POST));
     public static final Predicate<ServerHttpRequest> isSecuredGetOnlyADMIN =
             request -> openApiEndpointsGetSecuredOnlyADMIN
                     .stream()
