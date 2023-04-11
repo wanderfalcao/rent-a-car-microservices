@@ -85,7 +85,7 @@ public class AuthenticationService  {
         return jwtUtil.generateToken(usernamePasswordAuthenticationToken,authority);
     }
 
-    public ResponseEntity<MessageResponse> signup(String email, String firstname,String lastname, String password, String role) {
+    public ResponseEntity<MessageResponse> signup(String email, String firstname,String lastname, String password, Integer role) {
         if(!isValid(password)){
             throw new UserNotFoundException("Error: your password is not secure. " +
                     "\n" +
@@ -100,22 +100,16 @@ public class AuthenticationService  {
                 lastname,
                 email,
                 encoder.encode(password));
-        if (role.isBlank()) {
+        if (role.equals(ERole.ROLE_USER.ordinal())) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             user.setRole(userRole);
-        } else {
-            switch (role) {
-                case "admin":
-                    Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                    user.setRole(adminRole);
-                    break;
-                default:
-                    Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                    user.setRole(userRole);
-            }
+        } else if(role.equals(ERole.ROLE_ADMIN.ordinal())) {
+            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            user.setRole(adminRole);
+        }else{
+            throw new RuntimeException("Error: Role is not found.");
         }
         userRepository.save(user);
 

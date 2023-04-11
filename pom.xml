@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>br.com.infnet.wander</groupId>
-    <artifactId>rent-a-carDTO-microservices</artifactId>
+    <artifactId>rent-a-car-microservices</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>rent-a-carDTO-microservices</name>
     <description>rent-a-carDTO-microservices</description>
     <url>http://maven.apache.org</url>
     <modules>
-<!--        <module>carDTO-service</module>-->
+        <module>car-service</module>
         <module>order-service</module>
         <module>authentication-service</module>
         <module>configuration-service</module>

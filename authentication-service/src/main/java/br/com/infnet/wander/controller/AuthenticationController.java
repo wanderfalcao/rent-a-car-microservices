@@ -48,7 +48,7 @@ public class AuthenticationController {
                               "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyIERldGFpbHMiLCJpc3MiOiJDYXIgUmVudGFsIEFwcGxpY2F0aW9uIiwiZXhwIjoxNjQ5MjA2MjY0LCJpYXQiOjE2NDkxOTE4NjQsImVtYWlsIjoiYWRtaW5AYWRtaW4uaW8ifQ.b7jWKmX5eWPTBGB8Bbv5EwD25twMr5oPiGMIZP5XMGo"
                             }
                             """)}, schema = @Schema(implementation = AuthenticationResponse.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid username/password supplied", content = {
+            @ApiResponse(responseCode = "400", description = "Invalid email/password supplied", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))})})
     
     @PostMapping(value = "/auth/signin", produces = {"application/json"}, consumes = {"application/json"})
@@ -76,9 +76,4 @@ public class AuthenticationController {
                 signupRequest.getRole());
     }
 
-    @GetMapping (value = "/auth/decrypt", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Map<String, String>> RetrieveUserByJwt(@RequestHeader("Authorization") String request) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-
-        return authenticationService.getDecryptJWT(request);
-    }
 }

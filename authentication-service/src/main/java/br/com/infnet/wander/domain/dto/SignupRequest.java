@@ -26,6 +26,6 @@ public class SignupRequest {
     private final String password;
 
     @JsonProperty("Role")
-    @Schema(name = "Role", example = "user", required = false)
-    private final String role;
+    @Schema(name = "Role", example = "1", required = false)
+    private final Integer role;
 }

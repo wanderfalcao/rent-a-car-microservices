@@ -69,7 +69,7 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    //generate token for user
+
     public String generateToken(Authentication authentication, String authority) throws UnsupportedEncodingException {
         Map<String, Object> claims = new HashMap<>();
         String name = authentication.getName();
@@ -90,88 +90,6 @@ public class JwtUtil {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-//    public String generateToken(Authentication authentication, String authority) throws IllegalArgumentException {
-////        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-//        String name = authentication.getName();
-////        List<? extends GrantedAuthority> list = authentication.getAuthorities().stream().toList();
-////
-////        String grantedAuthorityRetrive = list.get(0).toString();
-//
-//        String serializedSecret = serializeSecret();
-//        Claims claims = Jwts.claims().setSubject(name);
-//        claims.put("username", name);
-//        claims.put("role", authority);
-//        return Jwts.builder()
-//                .setSubject(("User Details"))
-//                .setIssuedAt(new Date())
-//                .setClaims(claims)
-//                .setExpiration(DateUtils.addHours(new Date(), 4))
-//                .signWith(SignatureAlgorithm.HS256, secret)
-//                .compact();
-//    }
-//
-//    public Claims validateTokenAndRetrieveSubject(String token) {
-//            String serializedSecret = serializeSecret();
-//            Claims claims = Jwts.parser()
-//                    .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
-//                    .requireIssuer("Rent a car Application")
-//                    .requireSubject(("User Details"))
-//                    .parseClaimsJws(token).getBody();
-////            Jws<Claims> jwt = Jwts.parser().setSigningKey(secret).parseClaimsJws("username")
-////                    Jwts.parserBuilder()
-////                    .setSigningKey(secret)
-////                    .build()
-////                    .parseClaimsJws(jwt);
-////            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(serializedSecret))
-////                    .withSubject("User Details")
-////                    .withIssuer("Rent a car Application").build();
-////
-////            String subject = "User Details";
-////            DecodedJWT jwt = verifier.verify(token);
-//////            subject = jwt.getClaim("username").asString();
-////            subject = jwt;
-//            return claims;
-//
-//
-//    }
-
-//    public String generateTokenWithLastName(String lastName) throws IllegalArgumentException, JWTCreationException {
-//
-//        return JWT.create()
-//        .withSubject("User Details")
-//        .withClaim("username", lastName)
-//        .withIssuedAt(new Date())
-//        .withIssuer("Rent a car Application")
-//        .withExpiresAt(DateUtils.addHours(new Date(), 4))
-//        .sign(Algorithm.HMAC256(secret));
-//    }
-
-//    public Claims decodeJWT(String token) {
-//        String serializedSecret = serializeSecret();
-//        Claims claims = Jwts.parser()
-//                .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
-//                .requireIssuer("Rent a car Application")
-//                .requireSubject(("User Details"))
-//                .parseClaimsJws(token).getBody();
-//
-//        return claims;
-//        try{
-//            String serializedSecret = serializeSecret();
-//            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(serializedSecret))
-//                    .withSubject("User Details")
-//                    .withIssuer("Rent a car Application").build();
-//
-//            String subject = "User Details";
-//
-//            DecodedJWT jwt = verifier.verify(token);
-//            subject = jwt.getClaim("role").asString();
-//
-//            return subject;
-//        } catch (IllegalArgumentException e) {
-//            logger.error("Invalid JWT signature: {}", e.getMessage());
-//        }
-//        return "Not possible to retrieve a user";
-//    }
 
 
 
