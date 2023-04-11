@@ -14,27 +14,27 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Log4j2
 @Component
 public class OrderCreateEventListener {
-    
+
     private final RabbitTemplate rabbitTemplate;
     private final String queueOrderCreate;
     private final ObjectMapper mapper;
-    
+
     public OrderCreateEventListener(RabbitTemplate rabbitTemplate,
                                     @Value("${queue.order-create}") String queueOrderCreate, ObjectMapper mapper) {
-        
+
         this.rabbitTemplate = rabbitTemplate;
         this.queueOrderCreate = queueOrderCreate;
         this.mapper = mapper;
-        
+
     }
-    
+
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onCreateEvent(OrderCreateEvent event) throws JsonProcessingException {
-        
+
         log.info("Sending order create event to {}, event: {}", queueOrderCreate, event);
-        
+
         rabbitTemplate.convertAndSend(queueOrderCreate, mapper.writeValueAsString(event));
-        
+
     }
 }

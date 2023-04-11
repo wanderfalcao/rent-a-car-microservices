@@ -2,24 +2,27 @@ package br.com.infnet.wander.service;
 
 import br.com.infnet.wander.domain.dto.CarDTO;
 import br.com.infnet.wander.domain.dto.OrderRequest;
+import br.com.infnet.wander.domain.dto.OrderResponse;
 import br.com.infnet.wander.domain.exception.OrderNotFoundException;
 import br.com.infnet.wander.domain.mapper.OrderMapper;
-import br.com.infnet.wander.event.CarGetByIdEvent;
 import br.com.infnet.wander.event.OrderCreateEvent;
 import br.com.infnet.wander.event.OrderUpdateEvent;
 import br.com.infnet.wander.event.OrderUpdateStatusEvent;
-import br.com.infnet.wander.model.*;
+import br.com.infnet.wander.model.Order;
+import br.com.infnet.wander.model.OrderStatus;
+import br.com.infnet.wander.model.SagaStatus;
 import br.com.infnet.wander.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.context.event.EventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Log4j2
@@ -28,14 +31,15 @@ import java.util.*;
 public class OrderService {
 
     @Autowired
-    private  OrderRepository orderRepository;
+    private OrderRepository orderRepository;
     @Autowired
-    private  ApplicationEventPublisher publisher;
+    private ApplicationEventPublisher publisher;
     @Autowired
-    private  OrderMapper orderMapper;
+    private OrderMapper orderMapper;
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
-
+    @Autowired
+    private CarFeignClientService carFeignClientService;
     private String transactionId;
 
     @Transactional
@@ -44,10 +48,8 @@ public class OrderService {
         Order order = orderMapper.create(orderRequest);
         order.setId(sequenceGeneratorService.generateSequence(Order.SEQUENCE_NAME));
         order.setStatus(SagaStatus.CREATED);
+        order.setOrderStatus(OrderStatus.CREATED);
 
-//        CarDTO carDTO = new CarDTO();
-//        carDTO.setId(orderRequest.getCarId());
-//        order.setCarDTO(carDTO);
 
         log.info("Saving an order {}", order);
 
@@ -57,48 +59,33 @@ public class OrderService {
 
         return returnOrder;
     }
-    
+
     public void deleteOrderById(Long id) {
         orderRepository.deleteById(id);
     }
-    
+
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
         orderRepository.findAll().iterator().forEachRemaining(orders::add);
         return orders;
     }
-    
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id)
+
+    public OrderResponse getOrderById(Long id) {
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id" + id + " could not be found, ok bye."));
-    }
-
-    @Transactional
-    public CarDTO getCarById(Long id) {
-
-        return publishGetCarById(id);
-    }
-
-
-    private CarDTO publishGetCarById(Long id) {
-
-        transactionId = UUID.randomUUID().toString();
-        CarGetByIdEvent event = new CarGetByIdEvent(transactionId, id, new CarDTO());
-
-        log.info("Publishing an car id to get complete information of car event {}", event);
-
-        publisher.publishEvent(event);
-        CarDTO car = (CarDTO)event.getCar();
-        return car;
-    }
-    @Async
-    @EventListener
-    public void onCarResponseEvent(CarGetByIdEvent event) {
-        // Filtra eventos pelo transactionId correspondente
-        if (this.transactionId.equals(event.getTransactionId())) {
-            CarDTO car = event.getCar();
-            // Utilize o CarDTO retornado aqui
-        }
+        CarDTO carById = carFeignClientService.getCarById(order.getCarId());
+        OrderResponse orderResponse = new OrderResponse(order.getId(),
+                carById,
+                order.getDateOfBooking(),
+                order.getDateOfRental(),
+                order.getDateOfReturn(),
+                order.getPayment(),
+                order.getFirstName(),
+                order.getLastName(),
+                order.getEmail(),
+                order.getOrderStatus(),
+                order.getStatus());
+        return orderResponse;
     }
 
     @Transactional
@@ -117,7 +104,7 @@ public class OrderService {
 
         return returnOrder;
     }
-    
+
     public Order updateStatusById(Long id, OrderStatus orderStatus) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order was not found for " + id));
@@ -163,7 +150,7 @@ public class OrderService {
         publisher.publishEvent(event);
 
     }
-    
+
     @Transactional
     public void updateOrderCarUnavailable(Order order) {
 

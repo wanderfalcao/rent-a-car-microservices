@@ -6,10 +6,10 @@ import lombok.ToString;
 @ToString
 public enum OrderStatus {
     CREATED, CANCELED, ACTIVE, RETURNED;
-    
+
     @JsonValue
     public String getValue() {
         return this.name();
     }
-    
+
 }

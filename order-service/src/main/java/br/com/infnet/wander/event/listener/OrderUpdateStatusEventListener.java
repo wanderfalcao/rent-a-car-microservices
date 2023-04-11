@@ -20,7 +20,7 @@ public class OrderUpdateStatusEventListener {
     private final ObjectMapper mapper;
 
     public OrderUpdateStatusEventListener(RabbitTemplate rabbitTemplate,
-                                    @Value("${queue.order-update-status}") String queueOrderUpdateStatus, ObjectMapper mapper) {
+                                          @Value("${queue.order-update-status}") String queueOrderUpdateStatus, ObjectMapper mapper) {
 
         this.rabbitTemplate = rabbitTemplate;
         this.queueOrderUpdateStatus = queueOrderUpdateStatus;

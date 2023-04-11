@@ -15,7 +15,7 @@ public class TransactionIdentifier {
         id.set(value);
     }
 
-    public void unload(){
+    public void unload() {
         id.remove();
     }
 }

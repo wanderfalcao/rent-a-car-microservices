@@ -5,10 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
@@ -20,6 +19,12 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 public class CarDTO {
+
+    @Schema(name = "car_id", required = true, example = "1")
+    @JsonProperty("car_id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
+
     @Schema(name = "car_status", required = true, example = "AVAILABLE")
     @JsonProperty("car_status")
     private CarStatus carStatus;
@@ -35,13 +40,13 @@ public class CarDTO {
     @Schema(name = "color", required = true, example = "Black")
     @JsonProperty("color")
     private String color;
-    
+
     @Pattern(regexp = "^([\\w. ]+)$")
     @Size(max = 32)
     @Schema(name = "model", required = true, example = "TT")
     @JsonProperty("model")
     private String model;
-    
+
     @Valid
     @DecimalMin("0")
     @DecimalMax("999999")
@@ -51,7 +56,7 @@ public class CarDTO {
 
     @Valid
     @Schema(name = "picture_link", required = true,
-            example = "https://www.auto-data.net/en/audi-tt-rs-roadster-8s-facelift-2019-generation-7105#image8")
+            example = "https://3.bp.blogspot.com/-o5ikK8MaxDY/WnNDQYU9UQI/AAAAAAABBqE/N0ZDRy1hmXIsv23QjtE8qF0zoh50J9u0wCLcBGAs/s1600/Audi-TT-RS-2019-Brasil%2B%25283%2529.jpg")
     @JsonProperty("picture_link")
     private String pictureLink;
 }

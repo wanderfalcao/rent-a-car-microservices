@@ -16,21 +16,21 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 public class RabbitEventHandler {
-    
+
     private final OrderService orderService;
-    
+
     private ObjectMapper mapper;
-    
+
     @RabbitListener(queues = {"${queue.car-unavailable}"})
     public void handleCarUnavailableEvent(@Payload String payload) throws JsonProcessingException {
-        
+
         log.info("Handling a car unavailable event {}", payload);
-        
+
         CarUnavailableEvent event = mapper.readValue(payload, CarUnavailableEvent.class);
-        
-        
+
+
         orderService.updateOrderCarUnavailable(event.getOrder());
-        
+
     }
 
     @RabbitListener(queues = {"${queue.order-status-failure}"})

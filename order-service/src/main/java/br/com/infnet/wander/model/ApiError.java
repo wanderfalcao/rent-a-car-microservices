@@ -14,7 +14,7 @@ import java.util.List;
 
 @Data
 public class ApiError {
-    
+
     @NotNull
     @Schema(name = "status", required = true)
     @JsonProperty("status")
@@ -32,20 +32,20 @@ public class ApiError {
     @Schema(name = "errors")
     @JsonProperty("errors")
     private List<String> errors = new ArrayList<>();
-    
-    
+
+
     public ApiError(HttpStatus status, String message, String error) {
         timestamp = LocalDateTime.now();
         this.status = status;
         this.message = message;
         errors = Arrays.asList(error);
     }
-    
+
     public ApiError(HttpStatus status, String message) {
         timestamp = LocalDateTime.now();
         this.status = status;
         this.message = message;
     }
-    
+
 }
 
