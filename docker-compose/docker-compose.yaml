@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   mongodb_orders:
     image: mongo
@@ -6,40 +6,45 @@ services:
     ports:
       - "28084:27017"
     environment:
-      MONGO_INITDB_DATABASE: order
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: wanderSecret
-      MONGO_INITDB_ROOT_AUTH_SOURCE: admin
+      - MONGO_INITDB_DATABASE=order
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=wanderSecret
+      - MONGO_INITDB_ROOT_AUTH_SOURCE=admin
     volumes:
       - mongodb_orders_data:/data/db
-
+    networks:
+      - rent-a-car-net
   mongodb_cars:
     image: mongo
     container_name: mongodb_cars
     ports:
       - "28085:27017"
     environment:
-      MONGO_INITDB_DATABASE: car
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: wanderSecret
-      MONGO_INITDB_ROOT_AUTH_SOURCE: admin
+      - MONGO_INITDB_DATABASE=car
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=wanderSecret
+      - MONGO_INITDB_ROOT_AUTH_SOURCE=admin
     volumes:
       - mongodb_cars_data:/data/db
-
     networks:
       - rent-a-car-net
 
   userDB:
     image: mysql:8
     restart: always
+    container_name: userDB
     environment:
-      MYSQL_DATABASE: 'User'
-      MYSQL_PASSWORD: 'wanderSecret'
-      MYSQL_ROOT_PASSWORD: 'wanderSecret'
+      - MYSQL_DATABASE=User
+      - MYSQL_PASSWORD=wanderSecret
+      - MYSQL_ROOT_PASSWORD=wanderSecret
+    volumes:
+      - ./insertToRole.sql:/docker-entrypoint-initdb.d/insertToRole.sql
     ports:
-      - '3306:3306'
+      - "3306:3306"
     expose:
-      - '3306'
+      - "3306"
+    networks:
+      - rent-a-car-net
 
   configuration-service:
     image: configuration-service:latest
@@ -50,7 +55,6 @@ services:
     networks:
       - rent-a-car-net
 
-
   discovery-service:
     image: discovery-service:latest
     build: ../discovery-service/.
@@ -59,14 +63,14 @@ services:
     depends_on:
       - configuration-service
     environment:
-      PROFILE: "dev"
-      SERVER_PORT: "8070"
-      SPRING_CLOUD_CONFIG_URI: "http://configuration-service:8071"
-#      CONFIGSERVER_PORT: "8071"
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8070
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8071
+      - eureka.instance.hostname=discovery-service
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8070/
     container_name: discovery-service
     networks:
       - rent-a-car-net
-
 
   authentication-service:
     image: authentication-service:latest
@@ -74,24 +78,71 @@ services:
     container_name: authentication-service
     ports:
       - "8185:8185"
-
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8071
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8070/eureka/
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.datasource.url=jdbc:mysql://userDB:3306/User
+      - spring.datasource.username=root
+      - spring.datasource.password=wanderSecret
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
       - discovery-service
-      - mongodb_orders
-      - mongodb_cars
       - userDB
+      - configuration-service
+    networks:
+      - rent-a-car-net
+  car-service:
+    image: car-service:latest
+    build: ../car-service/.
+    container_name: car-service
+    ports:
+      - "8083:8083"
+    environment:
+      - spring.config.fail-fast=false
+        - SPRING_PROFILES_ACTIVE=dev
+        - SERVER_PORT=8084
+        - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8071
+        - eureka.client.serviceUrl.defaultZone=http://discovery-service:8070/eureka/
+        - spring.data.mongodb.uri=mongodb://root:wanderSecret@mongodb_cars:28085/car?authSource=admin
+    depends_on:
+      - mongodb_cars
+      - discovery-service
+      - configuration-service
+    networks:
+      - rent-a-car-net
+  order-service:
+    image: order-service:latest
+    build: ../order-service/.
+    container_name: order-service
+    ports:
+      - "8084:8084"
+    environment:
+     - spring.config.fail-fast=false
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8084
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8071
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8070/eureka/
+      - spring.data.mongodb.uri=mongodb://root:wanderSecret@mongodb_order:28084/order?authSource=admin
+
+    depends_on:
+      - mongodb_cars
+      - car-service
+      - discovery-service
       - configuration-service
     networks:
       - rent-a-car-net
   api-gateway:
     image: api-gateway:latest
     build: ../api-gateway/.
-    container_name: api-gateway-service
+    container_name: api-gateway
     environment:
-      PROFILE: "dev"
-      SERVER_PORT: "8060"
-      SPRING_CLOUD_CONFIG_URI: "http://configuration-service:8071"
-      SPRING_CLOUD_CONFIG_PORT: "8071"
+      - spring.config.fail-fast=false
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8060
+      - SPRING_CLOUD_CONFIG_URI=http://configuration-service:8071
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8070/eureka/
     ports:
       - "8060:8060"
     depends_on:
@@ -99,6 +150,7 @@ services:
       - configuration-service
     networks:
       - rent-a-car-net
+     
   rabbitmq:
     image: rabbitmq:3-management
     ports:

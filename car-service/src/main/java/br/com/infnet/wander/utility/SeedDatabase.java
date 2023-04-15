@@ -3,6 +3,7 @@ package br.com.infnet.wander.utility;
 import br.com.infnet.wander.model.Car;
 import br.com.infnet.wander.model.CarStatus;
 import br.com.infnet.wander.repository.CarRepository;
+import br.com.infnet.wander.service.SequenceGeneratorCarService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Component;
 public class SeedDatabase implements CommandLineRunner {
     
     private CarRepository carRepository;
+    private final SequenceGeneratorCarService sequenceGeneratorCarService;
     
-    public SeedDatabase(CarRepository carRepository) {
+    public SeedDatabase(CarRepository carRepository, SequenceGeneratorCarService sequenceGeneratorCarService) {
         this.carRepository = carRepository;
+        this.sequenceGeneratorCarService = sequenceGeneratorCarService;
     }
     
     @Override
@@ -23,7 +26,7 @@ public class SeedDatabase implements CommandLineRunner {
         this.carRepository.deleteAll();
         
         this.carRepository.save(new Car(
-                Long.valueOf(1),
+                sequenceGeneratorCarService.generateSequence(Car.SEQUENCE_NAME),
                 CarStatus.AVAILABLE,
                 "Alfa Romeo",
                 "Black",

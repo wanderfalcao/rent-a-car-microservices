@@ -22,17 +22,9 @@ public class OpenAPIConfig {
         
         final Server carServer = new Server();
         carServer.setUrl("http://localhost:8083/");
-
-        final Server orderServer = new Server();
-        orderServer.setUrl("http://localhost:8084/");
-
-        final Server authServer = new Server();
-        authServer.setUrl("http://localhost:8085/");
         
         final List<Server> servers = new ArrayList<>();
-        servers.add(authServer);
         servers.add(carServer);
-        servers.add(orderServer);
         
         
         return new OpenAPI()

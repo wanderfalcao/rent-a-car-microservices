@@ -47,18 +47,18 @@ public class OrderRequest {
     private Payment payment;
 
     @Size(max = 64)
-    @Schema(name = "first_name", required = true, example = "Max")
+    @Schema(name = "first_name", required = true, example = "wander")
     @JsonProperty("first_name")
     private String firstName;
 
     @Size(max = 64)
-    @Schema(name = "last_name", required = true, example = "Schneider")
+    @Schema(name = "last_name", required = true, example = "campelo")
     @JsonProperty("last_name")
     private String lastName;
 
     @Size(max = 64)
     @Email
-    @Schema(name = "email", required = true, example = "max.schneider@outlook.com")
+    @Schema(name = "email", required = true, example = "wanderfalcao@hotmail.com")
     @JsonProperty("email")
     private String email;
 

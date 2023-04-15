@@ -1,6 +1,6 @@
 spring:
   config:
-    location: http://localhost:8070
+    location: http://localhost:8071
   application:
     name: api-gateway
   profiles:

@@ -50,7 +50,6 @@ public class OrderController {
             @ApiResponse(responseCode = "400", description = "Invalid request message", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))})})
     @PostMapping(value = "/order", produces = {"application/json"}, consumes = {"application/json"})
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<Order> createOrder(
             @Parameter(name = "Order", description = "New order object", required = true) @Valid @RequestBody
             OrderRequest orderRequest) {

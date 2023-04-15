@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "af44f577-5828-48b6-a451-42edb66b8eec",
+		"name": "projeto-de-bloco",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11415068"
+	},
+	"item": [
+		{
+			"name": "order-service Copy",
+			"item": [
+				{
+					"name": "getById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/order/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"car_id\": 1,\n  \"location_of_rental_id\": 1,\n  \"location_of_return_id\": 1,\n  \"date_of_booking\": \"2022-05-07\",\n  \"date_of_rental\": \"2022-05-07\",\n  \"date_of_return\": \"2022-05-07\",\n  \"method_of_payment\": \"DINERS_CLUB\",\n  \"card_number\": \"4274323216727548\",\n  \"card_security_code\": \"976\",\n  \"valid_until\": \"2022-05-07T15:12:18.951Z\",\n  \"first_name\": \"Max\",\n  \"last_name\": \"Schneider\",\n  \"email\": \"max.schneider@outlook.com\",\n  \"order_status\": \"CREATED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/order/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/order/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/order/1/ACTIVE",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"1",
+								"ACTIVE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyIERldGFpbHMiLCJpc3MiOiJDYXIgUmVudGFsIEFwcGxpY2F0aW9uIiwiZXhwIjoxNjUyMDIxMzQ2LCJpYXQiOjE2NTIwMDY5NDYsInVzZXJuYW1lIjoiYWRtaW4ifQ.U2s7YthxAW2QN9fA9yuebJ7-8_UntFi4clY_J2bX71Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/order",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyIERldGFpbHMiLCJpc3MiOiJDYXIgUmVudGFsIEFwcGxpY2F0aW9uIiwiZXhwIjoxNjUyMDE2OTY4LCJpYXQiOjE2NTIwMDI1NjgsInVzZXJuYW1lIjoiYWRtaW4ifQ.ekqtPBgNLQnqDYfqwywA6w1Ho_f21VVAX8dVMxti6rs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"car_id\": 1,\n  \"location_of_rental_id\": 1,\n  \"location_of_return_id\": 1,\n  \"date_of_booking\": \"2022-05-08\",\n  \"date_of_rental\": \"2022-05-08\",\n  \"date_of_return\": \"2022-05-08\",\n  \"method_of_payment\": \"DINERS_CLUB\",\n  \"card_number\": \"4274323216727548\",\n  \"card_security_code\": \"976\",\n  \"valid_until\": \"2022-05-08T09:37:43.620Z\",\n  \"first_name\": \"Max\",\n  \"last_name\": \"Schneider\",\n  \"email\": \"max.schneider@outlook.com\",\n  \"order_status\": \"CREATED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/order",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "car-service Copy",
+			"item": [
+				{
+					"name": "getById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/car/6276c667b5b3a6787a31d592",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car",
+								"6276c667b5b3a6787a31d592"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"car_status\": \"AVAILABLE\",\n  \"chassis_number\": \"W0L000051T2123456\",\n  \"manufacturer\": \"Audi\",\n  \"construction_year\": \"2022-05-07\",\n  \"color\": \"Black\",\n  \"model\": \"TT\",\n  \"model_series\": \"Coupé\",\n  \"engine_fuel\": \"Diesel\",\n  \"engine_fuel_consumption\": 3.5,\n  \"engine_performance\": 300,\n  \"engine_type\": \"Hybrid\",\n  \"gear_type\": \"automatic\",\n  \"adblue\": false,\n  \"seats\": 2,\n  \"price\": 65000,\n  \"currency_symbol\": \"USD\",\n  \"picture_link\": \"https://www.auto-data.net/en/audi-tt-rs-roadster-8s-facelift-2019-generation-7105#image8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/car/0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/car/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "currencySymbol",
+									"value": "USD",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/car",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"car_status\": \"AVAILABLE\",\n  \"chassis_number\": \"W0L000051T2123456\",\n  \"manufacturer\": \"BMW\",\n  \"construction_year\": \"2022-05-07\",\n  \"color\": \"Black\",\n  \"model\": \"TT\",\n  \"model_series\": \"Coupé\",\n  \"engine_fuel\": \"Diesel\",\n  \"engine_fuel_consumption\": 3.5,\n  \"engine_performance\": 300,\n  \"engine_type\": \"Hybrid\",\n  \"gear_type\": \"automatic\",\n  \"adblue\": false,\n  \"seats\": 2,\n  \"price\": 65000,\n  \"currency_symbol\": \"USD\",\n  \"picture_link\": \"https://www.auto-data.net/en/audi-tt-rs-roadster-8s-facelift-2019-generation-7105#image8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/car",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByStatus",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "carStatus",
+									"value": "AVAILABLE",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/car/findByStatus",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car",
+								"findByStatus"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "signup",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "signin",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
